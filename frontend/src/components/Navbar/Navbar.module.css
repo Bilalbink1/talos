@@ -1,0 +1,20 @@
+.sidebar {
+    max-width: 20%;
+    background-color: #212529;
+    height: 100vh;
+}
+
+.sidebar-links-group {
+    border-radius: 0;
+}
+
+.sidebar-link-btn { 
+    padding: 15px;
+    border-radius: 0;
+}
+
+.logo { 
+    padding: 20px 10px 10px 10px;
+    margin-bottom: 40px;
+    color: white
+}
