@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { FileEarmarkLock2, Fingerprint } from "react-bootstrap-icons";
 
 export const SidebarLayout = () => {
-    const [selectedIndex, setSelectedIndex] = useState(-1);
     const sidebarLinks = [
         {
             label: "Cedentials",
@@ -18,12 +17,11 @@ export const SidebarLayout = () => {
             logo: <Fingerprint size="30" />,
         },
     ];
-    const navigate = useNavigate();
-    const location = useLocation();
-    console.log(location);
 
-    const selectLink = (sidebarLink: string, index: number) => {
-        setSelectedIndex(index);
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
+
+    const selectLink = (sidebarLink: string) => {
         navigate(sidebarLink);
     };
 
@@ -32,19 +30,19 @@ export const SidebarLayout = () => {
             <div className={styles.sidebar}>
                 <h2 className={styles.logo}>Talos</h2>
                 <div className={"list-group " + styles["sidebar-links-group"]}>
-                    {sidebarLinks.map((sidebarLink, index) => (
+                    {sidebarLinks.map((sidebarLink) => (
                         <button
                             key={sidebarLink.label}
                             type="button"
                             className={
                                 "btn text-start " +
                                 styles["sidebar-link-btn"] +
-                                (selectedIndex === index
+                                (pathname === sidebarLink.path
                                     ? " btn-primary"
                                     : " btn-dark")
                             }
                             aria-current="true"
-                            onClick={() => selectLink(sidebarLink.path, index)}
+                            onClick={() => selectLink(sidebarLink.path)}
                         >
                             <span className={styles["sidebar-link-btn-label"]}>
                                 {sidebarLink.logo}

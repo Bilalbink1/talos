@@ -2,8 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 
 import App from "./App.tsx";
 import SidebarLayout from "./components/SidebarLayout/SidebarLayout.tsx";
-import Credentials from "./components/Credentials/Credentials.tsx";
-import Verification from "./components/Verification/Verification.tsx";
+import Credentials from "./pages/Credentials/Credentials.tsx";
+import Verification from "./pages/Verification/Verification.tsx";
 
 const router = createBrowserRouter([
     {

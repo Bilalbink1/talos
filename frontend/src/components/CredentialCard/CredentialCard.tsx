@@ -1,7 +1,7 @@
 import React from "react";
 
-const Credentials = () => {
+const CredentialCard = () => {
     return <div>Credentials</div>;
 };
 
-export default Credentials;
+export default CredentialCard;
