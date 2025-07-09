@@ -1,0 +1,16 @@
+.dynamic-fields-container {
+    padding: 2rem;
+    border: 1px solid #c6c6c6;
+}
+
+.dynamic-form-group {
+    margin-bottom: 2rem;
+}
+
+.save-credential-btn {
+    margin-top: 2rem;
+}
+
+.credentials-details-row {
+    margin-bottom: 1rem;
+}
