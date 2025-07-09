@@ -4,20 +4,16 @@ import Form from "react-bootstrap/Form";
 import { Button, Row, Col } from "react-bootstrap";
 import { Plus, TrashFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
-interface CredentialDetails {
-    name: string;
-    description: string;
-}
+import { type Credential } from "../../types/credentials";
 
-interface CredentialResult {
+interface CredentialFormDetails {
     name: string;
     description: string;
-    credential: { [key: string]: string };
 }
 
 const DynamicForm = () => {
     const [credentialDetails, setCredentialDetails] =
-        useState<CredentialDetails>({
+        useState<CredentialFormDetails>({
             name: "",
             description: "",
         });
@@ -122,15 +118,14 @@ const DynamicForm = () => {
      * This function will use the attributeList state to generate a JSON containing all the attribute names as keys and attribute values as values.
      */
     const handleCreateCredential = () => {
-        let result: CredentialResult = {
+        let result: Credential = {
             name: credentialDetails.name,
             description: credentialDetails.description,
-            credential: {},
+            data: {},
         };
 
         for (const attribute of attributeList) {
-            result["credential"][attribute.attributeName] =
-                attribute.attributeValue;
+            result["data"][attribute.attributeName] = attribute.attributeValue;
         }
 
         navigate("/credentials");
