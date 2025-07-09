@@ -6,7 +6,7 @@ const CredentialForm = () => {
     return (
         <PageLayout title="Create New Credential">
             <Container>
-                <DynamicForm />
+                <DynamicForm previewMode={false} />
             </Container>
         </PageLayout>
     );

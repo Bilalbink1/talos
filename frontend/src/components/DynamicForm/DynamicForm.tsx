@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import styles from "./DynamicForm.module.css";
 import Form from "react-bootstrap/Form";
 import { Button, Row, Col } from "react-bootstrap";
@@ -6,12 +6,16 @@ import { Plus, TrashFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { type Credential } from "../../types/credentials";
 
+interface Props {
+    credential?: Credential;
+    previewMode: boolean;
+}
 interface CredentialFormDetails {
     name: string;
     description: string;
 }
 
-const DynamicForm = () => {
+const DynamicForm = ({ credential, previewMode = false }: Props) => {
     const [credentialDetails, setCredentialDetails] =
         useState<CredentialFormDetails>({
             name: "",
@@ -20,6 +24,40 @@ const DynamicForm = () => {
     const [attributeList, setAttributeList] = useState([
         { attributeName: "", attributeValue: "" },
     ]);
+
+    useEffect(() => {
+        if (credential && previewMode) {
+            setCredentialDetails({
+                name: credential.name,
+                description: credential.description,
+            });
+
+            setAttributeList(convertCredentialToAttributeList(credential.data));
+        }
+    }, []);
+
+    /**
+     * This function converts the key value pairs of the credentials to an array of objects with the format:
+     *  {
+     *      "attributeName": key,
+     *      "attributeValue": value
+     *  }
+     *  This will allow us to display the attributes exactly how the user added them in preview mode
+     * @param {object} credentialData
+     * @returns
+     */
+    const convertCredentialToAttributeList = (credentialData: object) => {
+        let result = [];
+
+        for (const [key, value] of Object.entries(credentialData)) {
+            result.push({
+                attributeName: key,
+                attributeValue: value,
+            });
+        }
+
+        return result;
+    };
 
     const navigate = useNavigate();
 
@@ -146,6 +184,7 @@ const DynamicForm = () => {
                             <Form.Control
                                 type="text"
                                 placeholder="Gym Membership"
+                                readOnly={previewMode}
                                 value={credentialDetails.name}
                                 onChange={(event) =>
                                     handleCredentialDetailChange(event, "name")
@@ -161,6 +200,7 @@ const DynamicForm = () => {
                             <Form.Control
                                 type="text"
                                 placeholder="My Gym Membership"
+                                readOnly={previewMode}
                                 value={credentialDetails.description}
                                 onChange={(event) =>
                                     handleCredentialDetailChange(
@@ -184,6 +224,7 @@ const DynamicForm = () => {
                                 <Form.Control
                                     value={attribute.attributeName}
                                     placeholder="Attribure Name"
+                                    readOnly={previewMode}
                                     onChange={(event) =>
                                         hanldeAttributeName(event, index)
                                     }
@@ -193,41 +234,48 @@ const DynamicForm = () => {
                                 <Form.Control
                                     value={attribute.attributeValue}
                                     placeholder="Attribute Value"
+                                    readOnly={previewMode}
                                     onChange={(event) =>
                                         hanldeAttributeValue(event, index)
                                     }
                                 />
                             </Col>
                             <Col sm="2">
-                                <Button
-                                    className={styles["delete-btn"]}
-                                    variant="danger"
-                                    onClick={() =>
-                                        handleRemoveAttributeField(index)
-                                    }
-                                >
-                                    <TrashFill size="20" />
-                                </Button>
+                                {!previewMode && (
+                                    <Button
+                                        className={styles["delete-btn"]}
+                                        variant="danger"
+                                        onClick={() =>
+                                            handleRemoveAttributeField(index)
+                                        }
+                                    >
+                                        <TrashFill size="20" />
+                                    </Button>
+                                )}
                             </Col>
                         </Form.Group>
                     ))}
-                    <Button
-                        variant="primary"
-                        onClick={handleAddNewAttributeField}
-                    >
-                        Add New Credential <Plus size="24" />
-                    </Button>
+                    {!previewMode && (
+                        <Button
+                            variant="primary"
+                            onClick={handleAddNewAttributeField}
+                        >
+                            Add New Credential <Plus size="24" />
+                        </Button>
+                    )}
                 </div>
             </Form>
-            <Button
-                className={styles["save-credential-btn"]}
-                variant="primary"
-                onClick={handleCreateCredential}
-                disabled={isSaveCredentialsDisabled}
-            >
-                {isSaveCredentialsDisabled}
-                Save Credential
-            </Button>
+            {!previewMode && (
+                <Button
+                    className={styles["save-credential-btn"]}
+                    variant="primary"
+                    onClick={handleCreateCredential}
+                    disabled={isSaveCredentialsDisabled}
+                >
+                    {isSaveCredentialsDisabled}
+                    Save Credential
+                </Button>
+            )}
         </>
     );
 };
