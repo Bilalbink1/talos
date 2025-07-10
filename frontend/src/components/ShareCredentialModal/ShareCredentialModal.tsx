@@ -7,7 +7,7 @@ interface Props {
     handleCloseModal: () => void;
 }
 
-export const ShareCredentialModal = ({
+const ShareCredentialModal = ({
     credentialData,
     showModal,
     handleCloseModal,
@@ -19,7 +19,7 @@ export const ShareCredentialModal = ({
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Share Credential
                 </Modal.Title>
@@ -31,8 +31,6 @@ export const ShareCredentialModal = ({
                     readOnly
                     value={JSON.stringify(credentialData, null, 4)}
                 />
-                <p>Copy your Public Key</p>
-                <Form.Control type="text" value={"test"} readOnly />
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={handleCloseModal}>Close</Button>
@@ -40,3 +38,5 @@ export const ShareCredentialModal = ({
         </Modal>
     );
 };
+
+export default ShareCredentialModal;

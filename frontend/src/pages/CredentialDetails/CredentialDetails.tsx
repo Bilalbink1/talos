@@ -1,9 +1,11 @@
-import { Container, Stack, Button, Modal, Form } from "react-bootstrap";
+import { useState } from "react";
+import { Container, Stack, Button } from "react-bootstrap";
 import { Share } from "react-bootstrap-icons";
 import PageLayout from "../../components/PageLayout/PageLayout";
 import DynamicForm from "../../components/DynamicForm/DynamicForm";
-import { ShareCredentialModal } from "../../components/ShareCredentialModal/ShareCredentialModal";
-import { useState } from "react";
+import ShareCredentialModal from "../../components/ShareCredentialModal/ShareCredentialModal";
+import DeleteCredentialModal from "../../components/DeleteCredentialModal/DeleteCredentialModal";
+import { useParams } from "react-router-dom";
 
 const sampleData = {
     id: "a811e702-bbd1-4c5a-ad90-feff7d157bf5",
@@ -16,10 +18,25 @@ const sampleData = {
 };
 
 const CredentialDetails = () => {
-    const [showModal, setShowModal] = useState(false);
+    const [showCredentialShareModal, setShowCredentialShareModal] =
+        useState(false);
+    const [showDeleteCredentialModal, setShowDeleteCredentialModal] =
+        useState(false);
 
-    const handleCloseModal = () => {
-        setShowModal(false);
+    const params = useParams();
+
+    console.log(params);
+
+    const handleClosCredentialShareModal = () => {
+        setShowCredentialShareModal(false);
+    };
+
+    const handleClosDeleteCredentialModal = () => {
+        setShowDeleteCredentialModal(false);
+    };
+
+    const handleDeleteCredential = () => {
+        handleClosDeleteCredentialModal();
     };
 
     return (
@@ -29,17 +46,27 @@ const CredentialDetails = () => {
                 <Stack gap={2} className="col-md-2">
                     <Button
                         variant="primary"
-                        onClick={() => setShowModal(true)}
+                        onClick={() => setShowCredentialShareModal(true)}
                     >
                         Share Credential <Share />
                     </Button>
-                    <Button variant="danger">Delete Credential</Button>
+                    <Button
+                        variant="danger"
+                        onClick={() => setShowDeleteCredentialModal(true)}
+                    >
+                        Delete Credential
+                    </Button>
                 </Stack>
             </Container>
             <ShareCredentialModal
-                showModal={showModal}
-                handleCloseModal={handleCloseModal}
+                showModal={showCredentialShareModal}
+                handleCloseModal={handleClosCredentialShareModal}
                 credentialData={sampleData.data}
+            />
+            <DeleteCredentialModal
+                showModal={showDeleteCredentialModal}
+                handleCloseModal={handleClosDeleteCredentialModal}
+                handleDeleteCredential={handleDeleteCredential}
             />
         </PageLayout>
     );
