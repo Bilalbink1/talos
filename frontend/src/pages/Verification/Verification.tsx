@@ -1,9 +1,10 @@
 import PageLayout from "../../components/PageLayout/PageLayout";
+import CredentialValidaton from "../../components/CredentialValidator/CredentialValidator";
 
 const Verification = () => {
     return (
         <PageLayout title="Verification">
-            <div>test</div>
+            <CredentialValidaton />
         </PageLayout>
     );
 };
