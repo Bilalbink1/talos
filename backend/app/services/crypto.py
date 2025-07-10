@@ -1,6 +1,10 @@
 import json
-from app.models.credentials import Credentials
+import base64
+from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
+from app.services.users import get_user_rsa_key_pair
+from app.models.credentials import Credentials
 
 def generate_rsa_key_pair_as_json() -> dict:
     """
@@ -26,6 +30,7 @@ def generate_rsa_key_pair_as_json() -> dict:
 
     return key_pair_dict
 
+
 def generate_signature(user_id: int, payload: dict) -> str:
     """
     Generates a digital signature for the payload of the credential.
@@ -38,5 +43,55 @@ def generate_signature(user_id: int, payload: dict) -> str:
         signature: The encrypted hash that will be used to verify the credential
     """
 
+    public_key, private_key = get_user_rsa_key_pair(user_id)
     
+    # Load keys from strings (PEM format)
+    private_key = RSA.import_key(private_key)
+    public_key = RSA.import_key(public_key)
 
+    # hash the payload
+    payload_hash = SHA256.new(json.dumps(payload, sort_keys=True).encode())
+
+    # Sign the hash
+    signature_bytes = pkcs1_15.new(private_key).sign(payload_hash)
+
+    # encode signature as base64 string for easier transfer and storing
+    signature = base64.b64encode(signature_bytes).decode()
+
+    return signature
+
+
+def verify_signature(credential: Credentials) -> bool:
+    """
+    Verifies the credential by creating the hash of the credential payload and comparing it with the hash that is encrpted in the signature of the credential
+
+    Args:
+        credential: The credential object containing the user defined payload and the digital signature
+
+    Return:
+        bool: True if the signature is valid and matches the payload; False otherwise.
+    """
+
+    issuer_id = credential.get("issuer_id")
+
+    public_key, private_key = get_user_rsa_key_pair(issuer_id)
+
+    # Load keys from strings (PEM format)
+    private_key = RSA.import_key(private_key)
+    public_key = RSA.import_key(public_key)
+
+    signature = credential.get("signature")
+
+    # Decode signature from base64
+    signature_bytes = base64.b64decode(signature)
+
+    payload = credential.get('payload')
+
+    # hash the payload
+    payload_hash = SHA256.new(json.dumps(payload, sort_keys=True).encode())
+
+    try:
+        pkcs1_15.new(public_key).verify(payload_hash, signature_bytes)
+        return True
+    except (ValueError, TypeError):
+        return False

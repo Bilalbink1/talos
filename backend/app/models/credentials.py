@@ -13,5 +13,5 @@ class Credentials(BaseModel):
     name: str
     description: str
     payload: dict
-    signature: dict
+    signature: str
     created_date: datetime
