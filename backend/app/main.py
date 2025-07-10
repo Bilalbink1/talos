@@ -1,8 +1,6 @@
 from fastapi import FastAPI
+from app.routers import credentials_router
 
 app = FastAPI()
 
-
-@app.get("/")
-def read_root():
-    return {"data": "data"}
+app.include_router(credentials_router)
