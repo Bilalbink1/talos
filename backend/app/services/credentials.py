@@ -39,7 +39,7 @@ def get_user_credential(user_id: int, credential_id: UUID) -> Credentials:
     user_credentials = credentials.get(str(user_id), [])
     
     # Find the credential by matching the credential's id
-    credential = next(credential for credential in user_credentials if credential["id"] == str(credential_id))
+    credential = next((credential for credential in user_credentials if credential["id"] == str(credential_id)), None)
 
     if not credential:
         return HTTPException(status_code=400, detail="User does not exist.")
@@ -68,7 +68,7 @@ def add_new_credential(user_id: int, new_credential: Credentials) -> None:
     save_credentials_to_json_file(credentials)
 
 
-def delete_user_credential(user_id: int, credential_id: Credentials) -> None:
+def delete_user_credential(user_id: int, credential_id: UUID) -> None:
     """
     Deletes the credential for the given user and credential ID.
 
@@ -77,7 +77,12 @@ def delete_user_credential(user_id: int, credential_id: Credentials) -> None:
         credential_id: The unique identifier of the credentials which is requested.
     """
 
-    credential = get_user_credential(user_id, credential_id)
+    user_credentials = get_user_credentials(user_id)
 
+    user_credentials = [credential for credential in user_credentials if credential["id"] != str(credential_id)]
+
+    credentials[str(user_id)] = user_credentials
+    
+    save_credentials_to_json_file(credentials)
 
 
