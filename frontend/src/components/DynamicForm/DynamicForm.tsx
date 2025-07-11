@@ -1,6 +1,7 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import styles from "./DynamicForm.module.css";
 import Form from "react-bootstrap/Form";
+import Spinner from "react-bootstrap/Spinner";
 import { Button, Row, Col } from "react-bootstrap";
 import { Plus, TrashFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +9,7 @@ import {
     type Credential,
     type CredentialCreate,
 } from "../../types/credentials";
-
+import { createNewCredential } from "../../api/credentials";
 interface Props {
     credential?: Credential | null;
     previewMode: boolean;
@@ -27,6 +28,8 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
     const [attributeList, setAttributeList] = useState([
         { attributeName: "", attributeValue: "" },
     ]);
+    const [isCreateCredentialLoading, setIsCreateCredentialLoading] =
+        useState(false);
 
     useEffect(() => {
         if (credential && previewMode) {
@@ -72,7 +75,9 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
             (attribute) =>
                 attribute.attributeName === "" ||
                 attribute.attributeValue === ""
-        ) && credentialDetails.name === "";
+        ) ||
+        credentialDetails.name === "" ||
+        isCreateCredentialLoading;
 
     /**
      * This function updates the value of the credential details object for the provided key in the param credentialDetailKey
@@ -160,7 +165,7 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
     /**
      * This function will use the attributeList state to generate a JSON containing all the attribute names as keys and attribute values as values.
      */
-    const handleCreateCredential = () => {
+    const handleCreateCredential = async () => {
         let newCredential: CredentialCreate = {
             name: credentialDetails.name,
             description: credentialDetails.description,
@@ -171,6 +176,10 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
             newCredential["payload"][attribute.attributeName] =
                 attribute.attributeValue;
         }
+
+        setIsCreateCredentialLoading(true);
+        await createNewCredential(newCredential);
+        setIsCreateCredentialLoading(false);
 
         navigate("/credentials");
     };
@@ -189,7 +198,7 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
                         <Col>
                             <Form.Control
                                 type="text"
-                                placeholder="Gym Membership"
+                                placeholder="Enter credential name"
                                 readOnly={previewMode}
                                 value={credentialDetails.name}
                                 onChange={(event) =>
@@ -205,7 +214,7 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
                         <Col>
                             <Form.Control
                                 type="text"
-                                placeholder="My Gym Membership"
+                                placeholder="Enter description (Optional)"
                                 readOnly={previewMode}
                                 value={credentialDetails.description}
                                 onChange={(event) =>
@@ -265,8 +274,9 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
                         <Button
                             variant="primary"
                             onClick={handleAddNewAttributeField}
+                            disabled={isCreateCredentialLoading}
                         >
-                            Add New Credential <Plus size="24" />
+                            Add New Credential
                         </Button>
                     )}
                 </div>
@@ -279,7 +289,10 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
                     disabled={isSaveCredentialsDisabled}
                 >
                     {isSaveCredentialsDisabled}
-                    Save Credential
+                    Save Credential{" "}
+                    {isCreateCredentialLoading && (
+                        <Spinner animation="border" size="sm" />
+                    )}
                 </Button>
             )}
         </>

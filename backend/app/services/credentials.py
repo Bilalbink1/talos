@@ -60,7 +60,6 @@ def add_new_credential(user_id: int, new_credential: CredentialsCreate) -> None:
         user_id: The unique identifier for the user.
         credential: The new credential to add
     """
-
     # generate the signature for the credential payload
     signature = generate_signature(user_id, new_credential.payload)
 
@@ -77,10 +76,9 @@ def add_new_credential(user_id: int, new_credential: CredentialsCreate) -> None:
         **new_credential.model_dump()
     )
 
-    if user_id not in credentials:
-        return HTTPException(status_code=400, detail="User does not exist.")
-        
-
+    if str(user_id) not in credentials:
+        raise HTTPException(status_code=400, detail="User does not exist.")
+    
     # Serialize the credential model to a dict 
     credentials.get(str(user_id)).append(full_credential.model_dump())
 

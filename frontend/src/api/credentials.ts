@@ -1,8 +1,10 @@
 
 
 import axios from 'axios';
-
-import { type Credential } from "../types/credentials";
+import {
+    type Credential,
+    type CredentialCreate,
+} from "../types/credentials";
 
 export const fetchUserCredentials = async (): Promise<Credential[]> => {
 
@@ -31,5 +33,19 @@ export const fetchUserCredential = async (credential_id: string): Promise<Creden
     .catch(function (error) {
         console.error(error);
         return null;
+    })
+}
+
+export const createNewCredential = async (credential: CredentialCreate): Promise<boolean> => {
+    return axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/users/0/credentials`,
+        credential
+    )
+    .then(() => {
+        return true
+    })
+    .catch(function (error) {
+        console.error(error);
+        return false
     })
 }
