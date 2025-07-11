@@ -7,7 +7,7 @@ from app.services.credentials import (
     delete_user_credential, 
     verify_user_credential
 )
-from app.models.credentials import CredentialsCreate
+from app.models.credentials import Credentials, CredentialsCreate
 
 router = APIRouter()
 
@@ -51,4 +51,14 @@ def delete_credential(user_id: int, credential_id: UUID):
 
     return {
         "mgs": "Credential deleted succesfully!"
+    }
+
+
+@router.post("/credentials/verify", tags=["credentials"])
+def verify_credential(credential: Credentials):
+
+    is_credential_valid = verify_user_credential(credential)
+
+    return {
+        "is_valid": is_credential_valid
     }

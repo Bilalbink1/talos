@@ -50,7 +50,7 @@ def get_user_credential(user_id: int, credential_id: UUID) -> Credentials:
     return credential
 
 
-def add_new_credential(user_id: int, credential: CredentialsCreate) -> None:
+def add_new_credential(user_id: int, new_credential: CredentialsCreate) -> None:
     """
     Adds the newly created credentials to the users credentials list.
     Checks if the user exists for the given user ID.
@@ -62,7 +62,7 @@ def add_new_credential(user_id: int, credential: CredentialsCreate) -> None:
     """
 
     # generate the signature for the credential payload
-    signature = generate_signature(user_id, credential.payload)
+    signature = generate_signature(user_id, new_credential.payload)
 
     # create the credential object by adding:
     # 1. a uuid as id
@@ -74,7 +74,7 @@ def add_new_credential(user_id: int, credential: CredentialsCreate) -> None:
         issuer_id=user_id,
         created_date=datetime.now(timezone.utc),
         signature=signature,
-        **credential.model_dump()
+        **new_credential.model_dump()
     )
 
     if user_id not in credentials:
@@ -103,3 +103,18 @@ def delete_user_credential(user_id: int, credential_id: UUID) -> None:
     credentials[str(user_id)] = user_credentials
     
     save_credentials_to_json_file(credentials)
+
+
+def verify_user_credential(credential: Credentials) -> bool:
+    """
+    Verifies the credential provided by verifying the digital signature
+
+    Args:
+        credential: The new credential to verify
+
+    Return:
+        - True: if the signature and the payload is valid
+        - False: if the signature or the payload is invalid
+    """
+
+    return verify_signature(credential)

@@ -72,7 +72,8 @@ def verify_signature(credential: Credentials) -> bool:
         bool: True if the signature is valid and matches the payload; False otherwise.
     """
 
-    issuer_id = credential.get("issuer_id")
+    # The issuer_id is the user_id whose public and private key pair was used to sign the credntial payload
+    issuer_id = credential.issuer_id
 
     public_key, private_key = get_user_rsa_key_pair(issuer_id)
 
@@ -80,12 +81,12 @@ def verify_signature(credential: Credentials) -> bool:
     private_key = RSA.import_key(private_key)
     public_key = RSA.import_key(public_key)
 
-    signature = credential.get("signature")
+    signature = credential.signature
 
     # Decode signature from base64
     signature_bytes = base64.b64decode(signature)
 
-    payload = credential.get('payload')
+    payload = credential.payload
 
     # hash the payload
     payload_hash = SHA256.new(json.dumps(payload, sort_keys=True).encode())
