@@ -4,7 +4,10 @@ import Form from "react-bootstrap/Form";
 import { Button, Row, Col } from "react-bootstrap";
 import { Plus, TrashFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
-import { type Credential } from "../../types/credentials";
+import {
+    type Credential,
+    type CredentialCreate,
+} from "../../types/credentials";
 
 interface Props {
     credential?: Credential;
@@ -32,7 +35,9 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
                 description: credential.description,
             });
 
-            setAttributeList(convertCredentialToAttributeList(credential.data));
+            setAttributeList(
+                convertCredentialToAttributeList(credential.payload)
+            );
         }
     }, []);
 
@@ -156,14 +161,15 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
      * This function will use the attributeList state to generate a JSON containing all the attribute names as keys and attribute values as values.
      */
     const handleCreateCredential = () => {
-        let result: Credential = {
+        let newCredential: CredentialCreate = {
             name: credentialDetails.name,
             description: credentialDetails.description,
-            data: {},
+            payload: {},
         };
 
         for (const attribute of attributeList) {
-            result["data"][attribute.attributeName] = attribute.attributeValue;
+            newCredential["payload"][attribute.attributeName] =
+                attribute.attributeValue;
         }
 
         navigate("/credentials");
