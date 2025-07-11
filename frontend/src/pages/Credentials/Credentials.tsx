@@ -1,39 +1,26 @@
+import { useState, useEffect } from "react";
 import PageLayout from "../../components/PageLayout/PageLayout";
 import CredentialCard from "../../components/CredentialCard/CredentialCard";
 import { Container, Button } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import styles from "./Credentials.module.css";
-
-const sampleData = [
-    {
-        id: 1,
-        name: "Gym Membership",
-        descrption:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-    },
-    {
-        id: 2,
-        name: "Gym Membership",
-        descrption:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-    },
-    {
-        id: 3,
-        name: "Gym Membership",
-        descrption:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-    },
-    {
-        id: 4,
-        name: "Gym Membership",
-        descrption:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-    },
-];
+import { type Credential } from "../../types/credentials";
+import { fetchUserCredentials } from "../../api/credentials";
 
 const Credentials = () => {
+    const [credentials, setCredentials] = useState<Credential[]>([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchAndSetCredentials();
+    }, []);
+
+    const fetchAndSetCredentials = async () => {
+        const fetchedCredentials: Credential[] = await fetchUserCredentials();
+        console.log(fetchedCredentials);
+        setCredentials(fetchedCredentials);
+    };
 
     const handleAddCredentialRedirect = () => {
         navigate("/credentials/create");
@@ -50,12 +37,12 @@ const Credentials = () => {
                         Add New Credential <Plus size="24" />
                     </Button>
                 </div>
-                {sampleData.map((data) => (
+                {credentials.map((credential) => (
                     <CredentialCard
-                        key={data.id}
-                        id={data.id}
-                        name={data.name}
-                        description={data.descrption}
+                        key={credential.id}
+                        id={credential.id}
+                        name={credential.name}
+                        description={credential.description}
                     />
                 ))}
             </Container>

@@ -3,7 +3,7 @@ import styles from "./CredentialCard.module.css";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-    id: number;
+    id: string;
     name: string;
     description: string;
 }
