@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PageLayout from "../../components/PageLayout/PageLayout";
 import CredentialCard from "../../components/CredentialCard/CredentialCard";
 import { Container, Row, Button } from "react-bootstrap";
-import { Plus } from "react-bootstrap-icons";
+import { Plus, ArrowClockwise } from "react-bootstrap-icons";
 import Spinner from "react-bootstrap/Spinner";
 import { useNavigate } from "react-router-dom";
 import styles from "./Credentials.module.css";
@@ -11,7 +11,7 @@ import { fetchUserCredentials } from "../../api/credentials";
 
 const Credentials = () => {
     const [credentials, setCredentials] = useState<Credential[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [isCredentialsloading, setIsCredentialsloading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -20,14 +20,18 @@ const Credentials = () => {
     }, []);
 
     const fetchAndSetCredentials = async () => {
-        setLoading(true);
+        setIsCredentialsloading(true);
         const fetchedCredentials: Credential[] = await fetchUserCredentials();
         setCredentials(fetchedCredentials);
-        setLoading(false);
+        setIsCredentialsloading(false);
     };
 
     const handleAddCredentialRedirect = () => {
         navigate("/credentials/create");
+    };
+
+    const handleRefreshCredentials = () => {
+        fetchAndSetCredentials();
     };
 
     return (
@@ -36,12 +40,19 @@ const Credentials = () => {
                 <div className={styles["button-container"]}>
                     <Button
                         variant="primary"
+                        onClick={handleRefreshCredentials}
+                        disabled={isCredentialsloading}
+                    >
+                        Refresh <ArrowClockwise size="24" />
+                    </Button>
+                    <Button
+                        variant="primary"
                         onClick={handleAddCredentialRedirect}
                     >
                         Add New Credential <Plus size="24" />
                     </Button>
                 </div>
-                {loading ? (
+                {isCredentialsloading ? (
                     <Row className="justify-content-md-center">
                         <Spinner animation="border" />
                     </Row>

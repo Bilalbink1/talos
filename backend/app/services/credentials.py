@@ -2,7 +2,7 @@
 from fastapi import HTTPException
 from uuid import UUID, uuid4
 from datetime import datetime, timezone
-from app.database import credentials
+from app.database import get_credentials_json
 from app.models.credentials import Credentials, CredentialsCreate
 from app.services.database import save_credentials_to_json_file
 from app.services.crypto import generate_signature, verify_signature
@@ -18,6 +18,8 @@ def get_user_credentials(user_id: int) -> list[Credentials]:
     Return:
         credentials: The list of credentials of the user
     """
+
+    credentials: list[Credentials] = get_credentials_json()
 
     # Default to an empty array if no credentials exist for the user_id
     user_credentials = credentials.get(str(user_id), [])
@@ -37,6 +39,8 @@ def get_user_credential(user_id: int, credential_id: UUID) -> Credentials:
     Return:
         credentials: The list of credentials of the user
     """
+
+    credentials: list[Credentials] = get_credentials_json()
 
     # Default to an empty array if no credentials exist for the user_id
     user_credentials = credentials.get(str(user_id), [])
@@ -76,6 +80,8 @@ def add_new_credential(user_id: int, new_credential: CredentialsCreate) -> None:
         **new_credential.model_dump()
     )
 
+    credentials: list[Credentials] = get_credentials_json()
+
     if str(user_id) not in credentials:
         raise HTTPException(status_code=400, detail="User does not exist.")
     
@@ -98,6 +104,8 @@ def delete_user_credential(user_id: int, credential_id: UUID) -> None:
 
     user_credentials = [credential for credential in user_credentials if credential["id"] != str(credential_id)]
 
+    credentials: list[Credentials] = get_credentials_json()
+    
     credentials[str(user_id)] = user_credentials
     
     save_credentials_to_json_file(credentials)
