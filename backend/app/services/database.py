@@ -1,7 +1,8 @@
 import json
 from pathlib import Path
 
-def save_credentials(new_credentials: dict):
+
+def save_credentials_to_json_file(new_credentials: dict) -> None:
     """
     Replaces the existing credentials.json file with the new value
 

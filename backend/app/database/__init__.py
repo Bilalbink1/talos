@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from .utils import *
+from app.models.credentials import Credentials
 
 BASE_DIR = Path(__file__).parent
 
@@ -9,4 +9,4 @@ def load_json(filename):
         return json.load(f)
 
 users: dict = load_json('users.json')
-credentials: list = load_json('credentials.json')
+credentials: list[Credentials] = load_json('credentials.json')
