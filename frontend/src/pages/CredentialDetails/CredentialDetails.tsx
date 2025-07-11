@@ -6,32 +6,35 @@ import PageLayout from "../../components/PageLayout/PageLayout";
 import DynamicForm from "../../components/DynamicForm/DynamicForm";
 import ShareCredentialModal from "../../components/ShareCredentialModal/ShareCredentialModal";
 import DeleteCredentialModal from "../../components/DeleteCredentialModal/DeleteCredentialModal";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { type Credential } from "../../types/credentials";
-import { fetchUserCredential } from "../../api/credentials";
+import { fetchUserCredential, deleteCredential } from "../../api/credentials";
 
 const CredentialDetails = () => {
     const [credential, setCredential] = useState<Credential>();
-    const [loading, setLoading] = useState(false);
+    const [isCredentialLoading, setIsCredentialLoading] = useState(false);
+    const [isDeleteCredentialLoading, setIsDeleteCredentialLoading] =
+        useState(false);
     const [showCredentialShareModal, setShowCredentialShareModal] =
         useState(false);
     const [showDeleteCredentialModal, setShowDeleteCredentialModal] =
         useState(false);
 
     const params = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchAndSetUserCredential();
     }, []);
 
     const fetchAndSetUserCredential = async () => {
-        setLoading(true);
+        setIsCredentialLoading(true);
         const credentialId: string = params.id!;
         const fetchedCredential: Credential = await fetchUserCredential(
             credentialId
         );
         setCredential(fetchedCredential);
-        setLoading(false);
+        setIsCredentialLoading(false);
     };
 
     const handleClosCredentialShareModal = () => {
@@ -42,13 +45,19 @@ const CredentialDetails = () => {
         setShowDeleteCredentialModal(false);
     };
 
-    const handleDeleteCredential = () => {
+    const handleDeleteCredential = async () => {
+        if (credential) {
+            setIsDeleteCredentialLoading(true);
+            await deleteCredential(credential.id);
+            setIsDeleteCredentialLoading(false);
+            navigate("/credentials");
+        }
         handleClosDeleteCredentialModal();
     };
 
     return (
         <PageLayout title="Credential Details">
-            {loading ? (
+            {isCredentialLoading ? (
                 <Row className="justify-content-md-center">
                     <Spinner animation="border" />
                 </Row>
@@ -88,6 +97,9 @@ const CredentialDetails = () => {
                             showModal={showDeleteCredentialModal}
                             handleCloseModal={handleClosDeleteCredentialModal}
                             handleDeleteCredential={handleDeleteCredential}
+                            isDeleteCredentialLoading={
+                                isDeleteCredentialLoading
+                            }
                         />
                     </>
                 )

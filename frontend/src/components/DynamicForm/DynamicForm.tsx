@@ -276,7 +276,7 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
                             onClick={handleAddNewAttributeField}
                             disabled={isCreateCredentialLoading}
                         >
-                            Add New Credential
+                            Add New Credential <Plus size="24" />
                         </Button>
                     )}
                 </div>

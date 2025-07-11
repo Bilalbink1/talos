@@ -49,3 +49,16 @@ export const createNewCredential = async (credential: CredentialCreate): Promise
         return false
     })
 }
+
+export const deleteCredential = async (credential_id: string): Promise<boolean> => {
+    return axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/users/0/credentials/${credential_id}`,
+    )
+    .then(() => {
+        return true
+    })
+    .catch(function (error) {
+        console.error(error);
+        return false
+    })
+}
