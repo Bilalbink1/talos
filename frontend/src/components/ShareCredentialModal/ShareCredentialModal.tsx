@@ -1,14 +1,15 @@
-import { Modal, Form, Button } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import styles from "./ShareCredentialModal.module.css";
+import { type Credential } from "../../types/credentials";
 
 interface Props {
     showModal: boolean;
-    credentialData: { [key: string]: string };
+    credential: Credential;
     handleCloseModal: () => void;
 }
 
 const ShareCredentialModal = ({
-    credentialData,
+    credential,
     showModal,
     handleCloseModal,
 }: Props) => {
@@ -29,7 +30,7 @@ const ShareCredentialModal = ({
                 <textarea
                     className={styles["code-block"]}
                     readOnly
-                    value={JSON.stringify(credentialData, null, 4)}
+                    value={JSON.stringify(credential, null, 4)}
                 />
             </Modal.Body>
             <Modal.Footer>

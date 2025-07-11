@@ -10,7 +10,7 @@ import {
 } from "../../types/credentials";
 
 interface Props {
-    credential?: Credential;
+    credential?: Credential | null;
     previewMode: boolean;
 }
 interface CredentialFormDetails {
