@@ -1,9 +1,12 @@
 
-from uuid import UUID
 from fastapi import HTTPException
+from uuid import UUID, uuid4
+from datetime import datetime, timezone
 from app.database import credentials
-from app.models.credentials import Credentials
+from app.models.credentials import Credentials, CredentialsCreate
 from app.services.database import save_credentials_to_json_file
+from app.services.crypto import generate_signature, verify_signature
+
 
 def get_user_credentials(user_id: int) -> list[Credentials]:
     """
@@ -47,7 +50,7 @@ def get_user_credential(user_id: int, credential_id: UUID) -> Credentials:
     return credential
 
 
-def add_new_credential(user_id: int, new_credential: Credentials) -> None:
+def add_new_credential(user_id: int, credential: CredentialsCreate) -> None:
     """
     Adds the newly created credentials to the users credentials list.
     Checks if the user exists for the given user ID.
@@ -55,15 +58,31 @@ def add_new_credential(user_id: int, new_credential: Credentials) -> None:
 
     Args:
         user_id: The unique identifier for the user.
-        new_credential: The new credential to add
+        credential: The new credential to add
     """
+
+    # generate the signature for the credential payload
+    signature = generate_signature(user_id, credential.payload)
+
+    # create the credential object by adding:
+    # 1. a uuid as id
+    # 2. the id of the user as issuer_id, this will be used to retrvie the Public key for verification of the payload
+    # 2. the created date
+    # 3. the digital signature
+    full_credential = Credentials(
+        id=uuid4(),
+        issuer_id=user_id,
+        created_date=datetime.now(timezone.utc),
+        signature=signature,
+        **credential.model_dump()
+    )
 
     if user_id not in credentials:
         return HTTPException(status_code=400, detail="User does not exist.")
         
 
     # Serialize the credential model to a dict 
-    credentials.get(str(user_id)).append(new_credential.model_dump())
+    credentials.get(str(user_id)).append(full_credential.model_dump())
 
     save_credentials_to_json_file(credentials)
 
@@ -84,5 +103,3 @@ def delete_user_credential(user_id: int, credential_id: UUID) -> None:
     credentials[str(user_id)] = user_credentials
     
     save_credentials_to_json_file(credentials)
-
-
