@@ -57,8 +57,22 @@ export const deleteCredential = async (credential_id: string): Promise<boolean> 
     .then(() => {
         return true
     })
-    .catch(function (error) {
+    .catch((error) => {
         console.error(error);
+        return false
+    })
+}
+
+export const verifyCredential = async (credential: Credential): Promise<boolean> => {
+    return axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/credentials/verify`,
+        credential
+    )
+    .then((response) => {
+        return response.data.is_valid;
+    })
+    .catch((error) => {
+        console.log(error)
         return false
     })
 }
