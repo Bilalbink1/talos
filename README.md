@@ -12,6 +12,13 @@ talos/
 
 ---
 
+
+## Project Report (Google Doc)
+
+https://docs.google.com/document/d/1y_AB4Z1TjnwBiu8yf-PKo6DUZSPiVbe-O6CZxPfBzr4/edit?usp=sharing
+
+---
+
 ## Getting Started
 
 ### Frontend (React.js)
