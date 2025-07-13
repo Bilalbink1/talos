@@ -73,6 +73,11 @@ const Credentials = () => {
                         />
                     ))
                 )}
+                {!isCredentialsloading && credentials.length == 0 && (
+                    <Row className="justify-content-center">
+                        You currently have no credentials
+                    </Row>
+                )}
             </Container>
         </PageLayout>
     );
