@@ -1,78 +1,123 @@
-
-
 import axios from 'axios';
 import {
     type Credential,
     type CredentialCreate,
 } from "../types/credentials";
+import {
+    type VerifyCredentialResponse,
+    type FetchUserCredentialsResponse,
+    type FetchUserCredentialResponse,
+    type DefaultResponse
+} from "../types/response"
 
-export const fetchUserCredentials = async (): Promise<Credential[]> => {
 
-    return axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/users/0/credentials`
+const axiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_BACKEND_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+
+axiosInstance.interceptors.response.use(
+    // No changes for successful response
+    (response) => {
+        return response
+    },
+    (error) => {
+        // Extract the error message from the backend error response
+        // Fallback error message incase of an unhandled backend error
+        const errorMessage: string = error?.response?.data?.detail?.error_message ? error.response.data.detail.error_message : "An unexpected error happened"
+
+        return Promise.reject(new Error(errorMessage));
+    }
+
+)
+
+export const fetchUserCredentials = async (): Promise<FetchUserCredentialsResponse> => {
+    return axiosInstance.get(
+        `/users/0/credentials`
     )
     .then((response) => {
-        const response_body = response.data.credentials;
-        return response_body
+        return {
+            credentials: response.data.credentials,
+            error: null
+        }
     })
-    .catch(function (error) {
-        console.error(error);
-        return [];
+    .catch((error) => {
+        return {
+            credentials: [],
+            error: error.message
+        }
     })
 }
 
-export const fetchUserCredential = async (credential_id: string): Promise<Credential> => {
-
-    return axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/users/0/credentials/${credential_id}`
+export const fetchUserCredential = async (credential_id: string): Promise<FetchUserCredentialResponse> => {
+    return axiosInstance.get(
+        `/users/0/credentials/${credential_id}`
     )
     .then((response) => {
-        const response_body = response.data.credential;
-        return response_body
+        return {
+            credential: response.data.credential,
+            error: null
+        }
     })
     .catch(function (error) {
-        console.error(error);
-        return null;
+        return {
+            credential: null,
+            error: error.message
+        }
     })
 }
 
-export const createNewCredential = async (credential: CredentialCreate): Promise<boolean> => {
-    return axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/users/0/credentials`,
+export const createNewCredential = async (credential: CredentialCreate): Promise<DefaultResponse> => {
+    return axiosInstance.put(
+        `/users/0/credentials`,
         credential
     )
     .then(() => {
-        return true
-    })
-    .catch(function (error) {
-        console.error(error);
-        return false
-    })
-}
-
-export const deleteCredential = async (credential_id: string): Promise<boolean> => {
-    return axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/users/0/credentials/${credential_id}`,
-    )
-    .then(() => {
-        return true
+        return {
+            error: null
+        }
     })
     .catch((error) => {
-        console.error(error);
-        return false
+        return {
+            error: error.message
+        }
     })
 }
 
-export const verifyCredential = async (credential: Credential): Promise<boolean> => {
-    return axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/credentials/verify`,
+export const deleteCredential = async (credential_id: string): Promise<DefaultResponse> => {
+    return axiosInstance.delete(
+        `/users/0/credentials/${credential_id}`,
+    )
+    .then(() => {
+        return {
+            error: null
+        }
+    })
+    .catch((error) => {
+        return {
+            error: error.message
+        }
+    })
+}
+
+export const verifyCredential = async (credential: Credential): Promise<VerifyCredentialResponse> => {
+    return axiosInstance.post(
+        `/credentials/verify`,
         credential
     )
     .then((response) => {
-        return response.data.is_valid;
+        return {
+            isValid: response.data.is_valid,
+            error: response.data.error
+        };
     })
     .catch((error) => {
-        console.log(error)
-        return false
+        return {
+            isValid: false,
+            error: error.message
+        };
     })
 }

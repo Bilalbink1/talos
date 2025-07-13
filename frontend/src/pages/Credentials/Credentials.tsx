@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Credentials.module.css";
 import { type Credential } from "../../types/credentials";
 import { fetchUserCredentials } from "../../api/credentials";
+import { type FetchUserCredentialsResponse } from "../../types/response";
 
 const Credentials = () => {
     const [credentials, setCredentials] = useState<Credential[]>([]);
@@ -21,9 +22,15 @@ const Credentials = () => {
 
     const fetchAndSetCredentials = async () => {
         setIsCredentialsloading(true);
-        const fetchedCredentials: Credential[] = await fetchUserCredentials();
-        setCredentials(fetchedCredentials);
+        const result: FetchUserCredentialsResponse =
+            await fetchUserCredentials();
+
+        setCredentials(result.credentials);
         setIsCredentialsloading(false);
+
+        if (result.error) {
+            alert(result.error);
+        }
     };
 
     const handleAddCredentialRedirect = () => {

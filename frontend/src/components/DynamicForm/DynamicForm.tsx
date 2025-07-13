@@ -10,6 +10,8 @@ import {
     type CredentialCreate,
 } from "../../types/credentials";
 import { createNewCredential } from "../../api/credentials";
+import { type DefaultResponse } from "../../types/response";
+
 interface Props {
     credential?: Credential | null;
     previewMode: boolean;
@@ -178,7 +180,14 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
         }
 
         setIsCreateCredentialLoading(true);
-        await createNewCredential(newCredential);
+        const result: DefaultResponse = await createNewCredential(
+            newCredential
+        );
+
+        if (result.error) {
+            alert(result.error);
+        }
+
         setIsCreateCredentialLoading(false);
 
         navigate("/credentials");

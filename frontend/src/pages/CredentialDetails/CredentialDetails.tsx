@@ -9,9 +9,13 @@ import DeleteCredentialModal from "../../components/DeleteCredentialModal/Delete
 import { useParams, useNavigate } from "react-router-dom";
 import { type Credential } from "../../types/credentials";
 import { fetchUserCredential, deleteCredential } from "../../api/credentials";
+import {
+    type DefaultResponse,
+    type FetchUserCredentialResponse,
+} from "../../types/response";
 
 const CredentialDetails = () => {
-    const [credential, setCredential] = useState<Credential>();
+    const [credential, setCredential] = useState<Credential | null>(null);
     const [isCredentialLoading, setIsCredentialLoading] = useState(false);
     const [isDeleteCredentialLoading, setIsDeleteCredentialLoading] =
         useState(false);
@@ -30,11 +34,17 @@ const CredentialDetails = () => {
     const fetchAndSetUserCredential = async () => {
         setIsCredentialLoading(true);
         const credentialId: string = params.id!;
-        const fetchedCredential: Credential = await fetchUserCredential(
+        const result: FetchUserCredentialResponse = await fetchUserCredential(
             credentialId
         );
-        setCredential(fetchedCredential);
+
+        setCredential(result.credential);
         setIsCredentialLoading(false);
+
+        if (result.error) {
+            alert(result.error);
+            navigate("/credentials");
+        }
     };
 
     const handleClosCredentialShareModal = () => {
@@ -48,8 +58,18 @@ const CredentialDetails = () => {
     const handleDeleteCredential = async () => {
         if (credential) {
             setIsDeleteCredentialLoading(true);
-            await deleteCredential(credential.id);
+            const result: DefaultResponse = await deleteCredential(
+                credential.id
+            );
+
             setIsDeleteCredentialLoading(false);
+
+            if (result.error) {
+                alert(result.error);
+                setShowDeleteCredentialModal(false);
+                return;
+            }
+
             navigate("/credentials");
         }
         handleClosDeleteCredentialModal();

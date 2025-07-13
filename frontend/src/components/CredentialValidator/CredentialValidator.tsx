@@ -1,9 +1,10 @@
 import { useState, type ChangeEvent } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
-import { type Credential } from "../../types/credentials";
-import styles from "./CredentialValidator.module.css";
 import { verifyCredential } from "../../api/credentials";
+import { type Credential } from "../../types/credentials";
+import { type VerifyCredentialResponse } from "../../types/response";
+import styles from "./CredentialValidator.module.css";
 
 const CredentialValidator = () => {
     const [isVerificationLoading, setIsVerificationLoading] = useState(false);
@@ -21,10 +22,12 @@ const CredentialValidator = () => {
             return;
         }
 
-        const isValid: boolean = await verifyCredential(credential);
+        const result: VerifyCredentialResponse = await verifyCredential(
+            credential
+        );
 
-        if (!isValid) {
-            setError("Credential is not valid!");
+        if (!result.isValid) {
+            setError(result.error ? result.error : "");
         }
 
         setIsVerificationLoading(false);
@@ -36,6 +39,7 @@ const CredentialValidator = () => {
             return credential;
         } catch (e) {
             setError("Invalid JSON.");
+            setIsVerificationLoading(false);
             return null;
         }
     };
