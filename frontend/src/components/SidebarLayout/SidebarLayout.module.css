@@ -31,7 +31,21 @@
 }
 
 .logo { 
-    padding: 20px 10px 10px 10px;
+    max-width: 24px !important;
+    height: auto;
+}
+
+.logo-text {
+    font-size: 24px;
+    color: white;
+    margin-left: 8px;
+}
+
+.logo-container {
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
     margin-bottom: 40px;
-    color: white
 }

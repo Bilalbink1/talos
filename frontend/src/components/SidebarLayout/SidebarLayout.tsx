@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import styles from "./SidebarLayout.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FileEarmarkLock2, Fingerprint } from "react-bootstrap-icons";
+import { Row, Image, Col } from "react-bootstrap";
 
 export const SidebarLayout = () => {
     const sidebarLinks = [
@@ -27,7 +28,13 @@ export const SidebarLayout = () => {
     return (
         <div className={styles.layout}>
             <div className={styles.sidebar}>
-                <h2 className={styles.logo}>Talos</h2>
+                <div className={styles["logo-container"]}>
+                    <Image
+                        className={styles["logo"]}
+                        src="src/assets/talos-logo.svg"
+                    />
+                    <label className={styles["logo-text"]}>Talos</label>
+                </div>
                 <div className={"list-group " + styles["sidebar-links-group"]}>
                     {sidebarLinks.map((sidebarLink) => (
                         <button
