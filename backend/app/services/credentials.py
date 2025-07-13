@@ -49,7 +49,9 @@ def get_user_credential(user_id: int, credential_id: UUID) -> Credentials:
     credential = next((credential for credential in user_credentials if credential["id"] == str(credential_id)), None)
 
     if not credential:
-        return HTTPException(status_code=400, detail="User does not exist.")
+        raise HTTPException(status_code=400, detail={
+            "error_message": "User does not exist."
+        })
 
     return credential
 
@@ -111,7 +113,7 @@ def delete_user_credential(user_id: int, credential_id: UUID) -> None:
     save_credentials_to_json_file(credentials)
 
 
-def verify_user_credential(credential: Credentials) -> bool:
+def verify_user_credential(credential: Credentials) -> tuple[bool, str]:
     """
     Verifies the credential provided by verifying the digital signature
 

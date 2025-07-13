@@ -61,7 +61,7 @@ def generate_signature(user_id: int, payload: dict) -> str:
     return signature
 
 
-def verify_signature(credential: Credentials) -> bool:
+def verify_signature(credential: Credentials) -> tuple[bool, str]:
     """
     Verifies the credential by creating the hash of the credential payload and comparing it with the hash that is encrpted in the signature of the credential
 
@@ -93,6 +93,6 @@ def verify_signature(credential: Credentials) -> bool:
 
     try:
         pkcs1_15.new(public_key).verify(payload_hash, signature_bytes)
-        return True
+        return True, None
     except (ValueError, TypeError):
-        return False
+        return False, "The payload hash does not match the digital signature."

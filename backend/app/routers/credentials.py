@@ -47,6 +47,7 @@ def create_credential(user_id: int, credential: CredentialsCreate):
 @router.delete("/users/{user_id}/credentials/{credential_id}", tags=["credentials"])
 def delete_credential(user_id: int, credential_id: UUID):
 
+    raise HTTPException(status_code=400, detail={"error_message": "test"})
     delete_user_credential(user_id, credential_id)
 
     return {
@@ -57,8 +58,9 @@ def delete_credential(user_id: int, credential_id: UUID):
 @router.post("/credentials/verify", tags=["credentials"])
 def verify_credential(credential: Credentials):
 
-    is_credential_valid = verify_user_credential(credential)
+    is_credential_valid, error = verify_user_credential(credential)
 
     return {
-        "is_valid": is_credential_valid
+        "is_valid": is_credential_valid,
+        "error": error
     }

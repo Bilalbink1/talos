@@ -20,7 +20,9 @@ def get_user_rsa_key_pair(user_id: int) -> tuple[str, str]:
     users: list[User] = get_user_json()
 
     if user_id not in users:
-        raise HTTPException(status_code=404, detail=f"User with id {user_id} not found")
+        raise HTTPException(status_code=404, detail={
+            "error_message": f"Invalid user ID."
+        })
     
     user = users.get(user_id)
 
