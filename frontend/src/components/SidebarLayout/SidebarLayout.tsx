@@ -3,6 +3,7 @@ import styles from "./SidebarLayout.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FileEarmarkLock2, Fingerprint } from "react-bootstrap-icons";
 import { Image } from "react-bootstrap";
+import talosLogo from "../../assets/talos-logo.svg";
 
 export const SidebarLayout = () => {
     const sidebarLinks = [
@@ -33,10 +34,7 @@ export const SidebarLayout = () => {
         <div className={styles.layout}>
             <div className={styles.sidebar}>
                 <div className={styles["logo-container"]}>
-                    <Image
-                        className={styles["logo"]}
-                        src="src/assets/talos-logo.svg"
-                    />
+                    <Image className={styles["logo"]} src={talosLogo} />
                     <label className={styles["logo-text"]}>Talos</label>
                 </div>
                 <div className={"list-group " + styles["sidebar-links-group"]}>
