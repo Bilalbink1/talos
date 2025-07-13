@@ -9,12 +9,12 @@ export const SidebarLayout = () => {
         {
             label: "Cedentials",
             path: "/credentials",
-            logo: <FileEarmarkLock2 size="30" />,
+            logo: <FileEarmarkLock2 size="24" />,
         },
         {
             label: "Verification",
             path: "/verification",
-            logo: <Fingerprint size="30" />,
+            logo: <Fingerprint size="24" />,
         },
     ];
 
@@ -37,9 +37,9 @@ export const SidebarLayout = () => {
                             className={
                                 "btn text-start " +
                                 styles["sidebar-link-btn"] +
-                                (pathname === sidebarLink.path
+                                (pathname.includes(sidebarLink.path)
                                     ? " btn-primary"
-                                    : " btn-dark")
+                                    : " ")
                             }
                             aria-current="true"
                             onClick={() => selectLink(sidebarLink.path)}

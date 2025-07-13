@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import App from "./App.tsx";
 import SidebarLayout from "./components/SidebarLayout/SidebarLayout.tsx";
@@ -10,7 +10,12 @@ import CredentialDetails from "./pages/CredentialDetails/CredentialDetails.tsx";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <SidebarLayout />,
+        element: (
+            <>
+                <SidebarLayout />
+                <Navigate to="/credentials" replace />
+            </>
+        ),
         children: [
             { index: true, element: <App /> },
             {
@@ -28,6 +33,10 @@ const router = createBrowserRouter([
             {
                 path: "verification",
                 element: <Verification />,
+            },
+            {
+                path: "*",
+                element: <Navigate to="/credentials" replace />,
             },
         ],
     },
