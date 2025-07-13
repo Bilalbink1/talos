@@ -26,13 +26,22 @@ const ShareCredentialModal = ({
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>Copy your credentials</p>
                 <textarea
                     aria-label="credential-json-string"
                     className={styles["code-block"]}
                     readOnly
                     value={JSON.stringify(credential, null, 4)}
                 />
+                <Button
+                    onClick={() =>
+                        navigator.clipboard.writeText(
+                            JSON.stringify(credential, null, 4)
+                        )
+                    }
+                    variant="outline-secondary"
+                >
+                    Copy Credential
+                </Button>
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={handleCloseModal}>Close</Button>

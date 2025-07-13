@@ -11,6 +11,9 @@ interface Props {
 const CredentialCard = ({ id, name, description }: Props) => {
     const navigate = useNavigate();
 
+    /**
+     * This function redirects the user to the credential details page
+     */
     const hanldeCredentialDetailsRedirect = () => {
         navigate(`/credentials/${id}`);
     };

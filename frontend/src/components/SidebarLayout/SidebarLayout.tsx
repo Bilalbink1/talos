@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import styles from "./SidebarLayout.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FileEarmarkLock2, Fingerprint } from "react-bootstrap-icons";
-import { Row, Image, Col } from "react-bootstrap";
+import { Image } from "react-bootstrap";
 
 export const SidebarLayout = () => {
     const sidebarLinks = [
@@ -21,6 +21,10 @@ export const SidebarLayout = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
+    /**
+     * This function redirects the user to the selected path
+     * @param sidebarLink the path of the website page
+     */
     const selectLink = (sidebarLink: string) => {
         navigate(sidebarLink);
     };

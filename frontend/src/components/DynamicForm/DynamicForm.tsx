@@ -33,6 +33,18 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
     const [isCreateCredentialLoading, setIsCreateCredentialLoading] =
         useState(false);
 
+    // Ensure there are no empty fields in the dynamic form
+    const isSaveCredentialsDisabled =
+        attributeList.some(
+            (attribute) =>
+                attribute.attributeName === "" ||
+                attribute.attributeValue === ""
+        ) ||
+        credentialDetails.name === "" ||
+        isCreateCredentialLoading;
+
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (credential && previewMode) {
             setCredentialDetails({
@@ -68,18 +80,6 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
 
         return result;
     };
-
-    const navigate = useNavigate();
-
-    // Ensure there are no empty fields in the dynamic form
-    const isSaveCredentialsDisabled =
-        attributeList.some(
-            (attribute) =>
-                attribute.attributeName === "" ||
-                attribute.attributeValue === ""
-        ) ||
-        credentialDetails.name === "" ||
-        isCreateCredentialLoading;
 
     /**
      * This function updates the value of the credential details object for the provided key in the param credentialDetailKey
@@ -180,9 +180,8 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
         }
 
         setIsCreateCredentialLoading(true);
-        const result: DefaultResponse = await createNewCredential(
-            newCredential
-        );
+        const result: DefaultResponse =
+            await createNewCredential(newCredential);
 
         if (result.error) {
             alert(result.error);

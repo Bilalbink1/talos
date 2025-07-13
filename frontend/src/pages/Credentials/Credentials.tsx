@@ -20,6 +20,11 @@ const Credentials = () => {
         fetchAndSetCredentials();
     }, []);
 
+    /**
+     * This function retrieves a list of credentials for the user form the backend service
+     * and sets the value to the credentials state.
+     * Displays an error alert in case of an error.
+     */
     const fetchAndSetCredentials = async () => {
         setIsCredentialsloading(true);
         const result: FetchUserCredentialsResponse =

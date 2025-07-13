@@ -31,12 +31,16 @@ const CredentialDetails = () => {
         fetchAndSetUserCredential();
     }, []);
 
+    /**
+     * This function retrieves the credential for the provided credential id from the backend service
+     * and sets the value to the credential state.
+     * Displays an error alert in case of an error
+     */
     const fetchAndSetUserCredential = async () => {
         setIsCredentialLoading(true);
         const credentialId: string = params.id!;
-        const result: FetchUserCredentialResponse = await fetchUserCredential(
-            credentialId
-        );
+        const result: FetchUserCredentialResponse =
+            await fetchUserCredential(credentialId);
 
         setCredential(result.credential);
         setIsCredentialLoading(false);
@@ -55,6 +59,9 @@ const CredentialDetails = () => {
         setShowDeleteCredentialModal(false);
     };
 
+    /**
+     * This function sends a request to delete the credential for the given credential_id to the backend service
+     */
     const handleDeleteCredential = async () => {
         if (credential) {
             setIsDeleteCredentialLoading(true);

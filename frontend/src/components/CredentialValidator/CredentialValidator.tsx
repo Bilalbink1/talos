@@ -12,6 +12,10 @@ const CredentialValidator = () => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState("");
 
+    /**
+     * This function makes a request to the backend service to verify the credential, creates an alert
+     * if the validation fails.
+     */
     const handleVerifyCredential = async () => {
         setError("");
         setShowModal(true);
@@ -22,9 +26,8 @@ const CredentialValidator = () => {
             return;
         }
 
-        const result: VerifyCredentialResponse = await verifyCredential(
-            credential
-        );
+        const result: VerifyCredentialResponse =
+            await verifyCredential(credential);
 
         if (!result.isValid) {
             setError(result.error ? result.error : "");
@@ -33,7 +36,11 @@ const CredentialValidator = () => {
         setIsVerificationLoading(false);
     };
 
-    const convertJSONStringTOCredential = () => {
+    /**
+     * This function parses the user provided string into a JSON.
+     * @returns {Credential | null}
+     */
+    const convertJSONStringTOCredential = (): Credential | null => {
         try {
             const credential: Credential = JSON.parse(credentialJsonString);
             return credential;
@@ -44,6 +51,10 @@ const CredentialValidator = () => {
         }
     };
 
+    /**
+     * This function updates the value of the credential state
+     * @param event The onChange event when the user inputs values
+     */
     const handlecredentialJsonStringChange = (event: ChangeEvent) => {
         setError("");
         setcredentialJsonString((event.target as HTMLInputElement).value);
@@ -78,8 +89,8 @@ const CredentialValidator = () => {
                         {error
                             ? "Error Verifying Credential"
                             : isVerificationLoading
-                            ? "Verifying Credential"
-                            : "Credential is Valid!"}
+                              ? "Verifying Credential"
+                              : "Credential is Valid!"}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
