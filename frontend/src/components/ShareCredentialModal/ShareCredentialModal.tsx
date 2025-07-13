@@ -28,6 +28,7 @@ const ShareCredentialModal = ({
             <Modal.Body>
                 <p>Copy your credentials</p>
                 <textarea
+                    aria-label="credential-json-string"
                     className={styles["code-block"]}
                     readOnly
                     value={JSON.stringify(credential, null, 4)}

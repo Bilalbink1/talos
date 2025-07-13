@@ -196,10 +196,7 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
     return (
         <>
             <Form>
-                <Form.Group
-                    className="mb-3"
-                    controlId="credential-details-form"
-                >
+                <Form.Group className="mb-3" controlId="credential-name">
                     <Row className={styles["credentials-details-row"]}>
                         <Form.Label className="h6" column lg={2}>
                             Name
@@ -216,6 +213,8 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
                             />
                         </Col>
                     </Row>
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="credential-description">
                     <Row className={styles["credentials-details-row"]}>
                         <Form.Label className="h6" column lg={2}>
                             Description
@@ -267,6 +266,7 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
                             <Col sm="2">
                                 {!previewMode && (
                                     <Button
+                                        aria-label={`delete-attribute-${index}`}
                                         className={styles["delete-btn"]}
                                         variant="danger"
                                         onClick={() =>

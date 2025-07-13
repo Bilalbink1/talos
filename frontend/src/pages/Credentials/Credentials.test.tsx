@@ -67,6 +67,7 @@ describe("Credentials", () => {
             name: /Refresh/i,
         });
 
+        // Mock user refreshing the credentials
         await userEvent.click(refreshButton);
 
         expect(await screen.findByText("Student ID")).toBeInTheDocument();

@@ -13,4 +13,5 @@ export interface Credential {
     description: string;
     payload: { [key: string]: string };
     created_date: DateTimeString;
+    signature: string;
 }
