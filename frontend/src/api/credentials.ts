@@ -105,7 +105,7 @@ export const deleteCredential = async (credential_id: string): Promise<DefaultRe
 
 export const verifyCredential = async (credential: Credential): Promise<VerifyCredentialResponse> => {
     return axiosInstance.post(
-        `/credentials/verify`,
+        `/users/0/credentials/verify`,
         credential
     )
     .then((response) => {
