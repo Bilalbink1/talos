@@ -47,7 +47,6 @@ def create_credential(user_id: int, credential: CredentialsCreate):
 @router.delete("/users/{user_id}/credentials/{credential_id}", tags=["credentials"])
 def delete_credential(user_id: int, credential_id: UUID):
 
-    raise HTTPException(status_code=400, detail={"error_message": "test"})
     delete_user_credential(user_id, credential_id)
 
     return {
