@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import styles from "./SidebarLayout.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
