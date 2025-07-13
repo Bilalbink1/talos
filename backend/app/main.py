@@ -6,7 +6,9 @@ app = FastAPI()
 
 # Configure CORS origins (allow your frontend URL)
 origins = [
-    "http://localhost:5173",  # React dev server URL
+    "http://localhost:5173",  # React dev server URL,
+    "https://talos-cred-wallet.fly.dev", # Fly.io production URL
+    
 ]
 
 app.add_middleware(
