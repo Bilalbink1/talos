@@ -54,7 +54,7 @@ def delete_credential(user_id: int, credential_id: UUID):
     }
 
 
-@router.post("/credentials/verify", tags=["credentials"])
+@router.post("/users/{user_id}/credentials/verify", tags=["credentials"])
 def verify_credential(credential: Credentials):
 
     is_credential_valid, error = verify_user_credential(credential)
