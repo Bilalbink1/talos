@@ -50,11 +50,16 @@ npm run dev
 
 ```bash
 cd backend
-docker build -t talos .
+docker build -t talos -f Dockerfile.dev .
 ```
 
 #### Run the container
-
+#### Windows
 ```bash
-docker run -it --name talos -p 80:80 talos
+docker run -it --name talos -p 80:80 -v ${pwd}/app:/code/app talos
+```
+
+#### Max/Linux
+```bash
+docker run -it --name talos -p 80:80 -v "$(pwd)/app:/code/app" talos
 ```
