@@ -88,7 +88,7 @@ describe("DynamicForm", () => {
         );
 
         const addAttributeButton = screen.getByRole("button", {
-            name: /Add New Credential/i,
+            name: /Add New Attribute/i,
         });
 
         await userEvent.click(addAttributeButton);
