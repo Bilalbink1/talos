@@ -175,6 +175,17 @@ const DynamicForm = ({ credential, previewMode = false }: Props) => {
         };
 
         for (const attribute of attributeList) {
+            // The keys for the payload are dynamic, its possible the user enters duplicate keys on accident
+            // In that case we will check if the attribute already exists and inform the user if there is a duplicate
+            if (
+                newCredential["payload"].hasOwnProperty(attribute.attributeName)
+            ) {
+                alert(
+                    "Duplicate attribute names were found. Please remove the duplicate to continue"
+                );
+                return;
+            }
+
             newCredential["payload"][attribute.attributeName] =
                 attribute.attributeValue;
         }
